@@ -1,4 +1,4 @@
 name: OKDWebhook
 version: 1.0
-main: nl.odysseykingdom.webhook.WebhookPlugin
+main: nl.odysseykingdom.webhook.bukkit.WebhookPlugin
 api-version: 1.21

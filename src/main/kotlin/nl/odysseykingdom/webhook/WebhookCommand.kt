@@ -7,7 +7,7 @@ import revxrsal.commands.bukkit.actor.BukkitCommandActor
 import revxrsal.commands.bukkit.annotation.CommandPermission
 
 @Command("webhook", "wh")
-class WebhookCommand(val plugin: WebhookPlugin) {
+class WebhookCommand(val plugin: IPlugin) {
 
     @CommandPermission("webhook.list")
     @Subcommand("list", "l")
@@ -30,7 +30,6 @@ class WebhookCommand(val plugin: WebhookPlugin) {
         @Optional payload: String?
     ) {
         try {
-            // Check if message is required before sending
             if (plugin.requiresMessage(webhook) && (payload == null || payload.isBlank())) {
                 actor.reply("§cError: This webhook template requires a message. Please provide one.")
                 return
