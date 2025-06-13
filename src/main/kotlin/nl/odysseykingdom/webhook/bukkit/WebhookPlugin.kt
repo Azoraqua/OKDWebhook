@@ -1,5 +1,6 @@
 package nl.odysseykingdom.webhook.bukkit
 
+import kotlinx.coroutines.Job
 import nl.odysseykingdom.webhook.*
 import org.bukkit.plugin.java.JavaPlugin
 import revxrsal.commands.Lamp
@@ -25,10 +26,11 @@ class WebhookPlugin : JavaPlugin(), IPlugin {
     }
     override val webhooks: MutableList<Webhook> = mutableListOf()
     override val customLogger = super.logger
+    override val configFile = dataFolder.resolve("config.yml")
 
     override fun onEnable() {
         super.saveDefaultConfig()
-        this.reloadWebhooks()
+        reloadWebhooks()
 
         commandManager.register(WebhookCommand(this))
     }
@@ -38,31 +40,10 @@ class WebhookPlugin : JavaPlugin(), IPlugin {
     }
 
     override fun reloadWebhooks() {
-        // Clear existing webhooks before loading new ones
-        webhooks.clear()
+        WebhookUtils.reloadWebhooks(this)
+    }
 
-        val root = config.getConfigurationSection("webhooks")
-
-        root?.getKeys(false)?.forEach { webhook ->
-            val url = root.getString("${webhook}.url") ?: return@forEach
-            val name = root.getString("${webhook}.name") ?: webhook
-            val messageTemplate = root.getString("${webhook}.messageTemplate")
-            val embedTemplate = root.getString("${webhook}.embedTemplate")
-
-            // Check for structured embed template
-            val embedSection = root.getConfigurationSection("${webhook}.embedTemplate")
-            val structuredEmbedTemplate = if (embedSection != null) {
-                val title = embedSection.getString("title")
-                val description = embedSection.getString("description")
-                val color = if (embedSection.contains("color")) embedSection.getInt("color") else null
-
-                EmbedTemplate(title, description, color)
-            } else {
-                null
-            }
-
-            webhooks.add(Webhook(name, url, messageTemplate, embedTemplate, structuredEmbedTemplate))
-            logger.info("Loaded webhook '$name' with URL '$url'")
-        }
+    override fun sendToWebhook(webhook: Webhook, payload: String?): Job {
+        return WebhookUtils.sendToWebhook(this, webhook, payload)
     }
 }

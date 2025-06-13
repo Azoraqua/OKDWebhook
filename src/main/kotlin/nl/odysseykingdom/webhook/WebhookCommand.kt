@@ -12,7 +12,17 @@ class WebhookCommand(val plugin: IPlugin) {
     @CommandPermission("webhook.list")
     @Subcommand("list", "l")
     fun onList(actor: BukkitCommandActor) {
-        actor.reply("Webhooks: ${plugin.webhooks.joinToString(", ")}")
+        actor.reply(buildString {
+            appendLine("§6Webhooks: §r")
+
+            if (plugin.webhooks.isEmpty()) {
+                append("§cNone")
+            } else {
+                plugin.webhooks.forEach { webhook ->
+                    appendLine("§7-§a ${webhook.name} (${webhook.url})§r")
+                }
+            }
+        })
     }
 
     @CommandPermission("webhook.reload")
@@ -30,7 +40,7 @@ class WebhookCommand(val plugin: IPlugin) {
         @Optional payload: String?
     ) {
         try {
-            if (plugin.requiresMessage(webhook) && (payload == null || payload.isBlank())) {
+            if (WebhookUtils.requiresMessage(webhook) && payload.isNullOrBlank()) {
                 actor.reply("§cError: This webhook template requires a message. Please provide one.")
                 return
             }

@@ -6,15 +6,13 @@ import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
 import com.velocitypowered.api.plugin.Plugin
 import com.velocitypowered.api.plugin.annotation.DataDirectory
 import com.velocitypowered.api.proxy.ProxyServer
+import kotlinx.coroutines.Job
 import nl.odysseykingdom.webhook.*
-import org.yaml.snakeyaml.Yaml
 import revxrsal.commands.Lamp
 import revxrsal.commands.velocity.VelocityLamp
 import revxrsal.commands.velocity.actor.VelocityCommandActor
 import java.io.File
-import java.io.FileInputStream
 import java.io.FileOutputStream
-import java.io.InputStream
 import java.nio.file.Path
 import java.util.logging.Logger
 
@@ -41,7 +39,7 @@ class WebhookPlugin @Inject constructor(
             .build() 
     }
     override val webhooks: MutableList<Webhook> = mutableListOf()
-    private val configFile: File by lazy { dataDirectory.resolve("config.yml").toFile() }
+    override val configFile: File by lazy { dataDirectory.resolve("config.yml").toFile() }
 
     @Subscribe
     fun onProxyInitialize(event: ProxyInitializeEvent) {
@@ -67,64 +65,23 @@ class WebhookPlugin @Inject constructor(
      */
     private fun saveDefaultConfig() {
         try {
-            val inputStream = javaClass.classLoader.getResourceAsStream("config.yml")
-            if (inputStream != null) {
-                val outputStream = FileOutputStream(configFile)
-                inputStream.copyTo(outputStream)
-                outputStream.close()
-                inputStream.close()
-                customLogger.info("Default config.yml has been saved.")
-            } else {
-                customLogger.warning("Could not find default config.yml in resources.")
-            }
+            javaClass.classLoader.getResourceAsStream("config.yml")?.use { inputStream ->
+                FileOutputStream(configFile).use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                    customLogger.info("Default config.yml has been saved.")
+                }
+            } ?: customLogger.warning("Could not find default config.yml in resources.")
         } catch (e: Exception) {
             customLogger.severe("Failed to save default config.yml: ${e.message}")
             e.printStackTrace()
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
     override fun reloadWebhooks() {
-        // Clear existing webhooks before loading new ones
-        webhooks.clear()
+        WebhookUtils.reloadWebhooks(this)
+    }
 
-        try {
-            val inputStream: InputStream = FileInputStream(configFile)
-            val yaml = Yaml()
-            val config = yaml.load<Map<String, Any>>(inputStream)
-
-            val webhooksSection = config["webhooks"] as? Map<String, Any> ?: return
-
-            webhooksSection.forEach { (webhookKey, webhookValue) ->
-                if (webhookValue is Map<*, *>) {
-                    val webhookMap = webhookValue as Map<String, Any>
-
-                    val url = webhookMap["url"] as? String ?: return@forEach
-                    val name = webhookMap["name"] as? String ?: webhookKey
-                    val messageTemplate = webhookMap["messageTemplate"] as? String
-                    val embedTemplate = webhookMap["embedTemplate"] as? String
-
-                    // Check for structured embed template
-                    val embedSection = webhookMap["embedTemplate"] as? Map<String, Any>
-                    val structuredEmbedTemplate = if (embedSection != null) {
-                        val title = embedSection["title"] as? String
-                        val description = embedSection["description"] as? String
-                        val color = if (embedSection.containsKey("color")) embedSection["color"] as? Int else null
-
-                        EmbedTemplate(title, description, color)
-                    } else {
-                        null
-                    }
-
-                    webhooks.add(Webhook(name, url, messageTemplate, embedTemplate, structuredEmbedTemplate))
-                    customLogger.info("Loaded webhook '$name' with URL '$url'")
-                }
-            }
-
-            inputStream.close()
-        } catch (e: Exception) {
-            customLogger.severe("Failed to load webhooks from config.yml: ${e.message}")
-            e.printStackTrace()
-        }
+    override fun sendToWebhook(webhook: Webhook, payload: String?): Job {
+        return WebhookUtils.sendToWebhook(this, webhook, payload)
     }
 }

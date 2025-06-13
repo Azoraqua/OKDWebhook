@@ -10,6 +10,6 @@ class WebhookParameter<A : CommandActor>(val plugin: IPlugin) : ParameterType<A,
         input: MutableStringStream,
         context: ExecutionContext<A>
     ): Webhook? {
-        return plugin.webhooks.find { it.name.equals(input.readString(), true) }
+        return plugin.webhooks.find { it.name.equals(input.readString(), ignoreCase = true) }
     }
 }
