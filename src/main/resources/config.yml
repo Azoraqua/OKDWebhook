@@ -3,19 +3,11 @@ webhooks:
   # example:
   #   name: "Example Webhook"
   #   url: "https://discord.com/api/webhooks/your-webhook-url"
-  #   # Optional: Template for messages (for non-Discord webhooks)
-  #   # Use %message% as a placeholder for the actual message
-  #   messageTemplate: "Server message: %message%"
-  #   
-  #   # Optional: Template for embeds (for Discord webhooks)
-  #   # You can use either a simple string template:
-  #   # embedTemplate: "**Server Notification**\n\n%message%"
-  #   
-  #   # Or a structured template with separate fields (recommended):
-  #   # embedTemplate:
-  #   #   title: "Server Notification"
-  #   #   description: "%message%"
-  #   #   color: 0xFF0000  # Red color in hexadecimal
+  #   messageTemplate: "Server message: %message%" # Optional
+  #   embedTemplate: # Optional
+  #     title: "Server Notification"
+  #     description: "%message%"
+  #     color: 0xFF0000
   #
   # Note: Discord webhooks (URLs containing discord.com or discordapp.com)
   # will automatically receive messages as embeds instead of plain text.
