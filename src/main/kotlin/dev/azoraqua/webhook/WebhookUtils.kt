@@ -1,4 +1,4 @@
-package nl.odysseykingdom.webhook
+package dev.azoraqua.webhook
 
 import com.google.gson.Gson
 import com.google.gson.JsonArray

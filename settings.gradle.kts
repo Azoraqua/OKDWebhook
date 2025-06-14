@@ -1,1 +1,1 @@
-rootProject.name = "OdysseyWebhook"
+rootProject.name = "Webhook"

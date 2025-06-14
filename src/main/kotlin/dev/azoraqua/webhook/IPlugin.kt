@@ -1,4 +1,4 @@
-package nl.odysseykingdom.webhook
+package dev.azoraqua.webhook
 
 import kotlinx.coroutines.Job
 import revxrsal.commands.Lamp

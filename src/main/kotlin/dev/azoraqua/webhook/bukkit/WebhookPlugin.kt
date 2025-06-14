@@ -1,7 +1,7 @@
-package nl.odysseykingdom.webhook.bukkit
+package dev.azoraqua.webhook.bukkit
 
+import dev.azoraqua.webhook.*
 import kotlinx.coroutines.Job
-import nl.odysseykingdom.webhook.*
 import org.bukkit.plugin.java.JavaPlugin
 import revxrsal.commands.Lamp
 import revxrsal.commands.bukkit.BukkitLamp

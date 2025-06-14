@@ -1,4 +1,4 @@
-package nl.odysseykingdom.webhook.velocity
+package dev.azoraqua.webhook.velocity
 
 import com.google.inject.Inject
 import com.velocitypowered.api.event.Subscribe
@@ -6,8 +6,13 @@ import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
 import com.velocitypowered.api.plugin.Plugin
 import com.velocitypowered.api.plugin.annotation.DataDirectory
 import com.velocitypowered.api.proxy.ProxyServer
+import dev.azoraqua.webhook.IPlugin
+import dev.azoraqua.webhook.Webhook
+import dev.azoraqua.webhook.WebhookCommand
+import dev.azoraqua.webhook.WebhookParameter
+import dev.azoraqua.webhook.WebhookSuggestionProvider
+import dev.azoraqua.webhook.WebhookUtils
 import kotlinx.coroutines.Job
-import nl.odysseykingdom.webhook.*
 import revxrsal.commands.Lamp
 import revxrsal.commands.velocity.VelocityLamp
 import revxrsal.commands.velocity.actor.VelocityCommandActor

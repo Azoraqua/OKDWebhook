@@ -1,4 +1,4 @@
-package nl.odysseykingdom.webhook
+package dev.azoraqua.webhook
 
 import revxrsal.commands.autocomplete.SuggestionProvider
 import revxrsal.commands.command.CommandActor

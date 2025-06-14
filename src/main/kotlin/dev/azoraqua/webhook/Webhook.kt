@@ -1,4 +1,4 @@
-package nl.odysseykingdom.webhook
+package dev.azoraqua.webhook
 
 data class EmbedTemplate(
     val title: String? = null,

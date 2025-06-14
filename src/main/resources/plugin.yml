@@ -1,4 +1,5 @@
-name: OKDWebhook
-version: 1.0
-main: nl.odysseykingdom.webhook.bukkit.WebhookPlugin
-api-version: 1.21
+name: ${projectName}
+version: ${projectVersion}
+api-version: ${paperApiVersion}
+main: dev.azoraqua.webhook.bukkit.WebhookPlugin
+author: Azoraqua
