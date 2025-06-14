@@ -48,7 +48,7 @@ object WebhookUtils {
                             (webhookMap["embedTemplate"] as? Map<String, Any>)?.let { embedSection ->
                                 val title = embedSection["title"] as? String
                                 val description = embedSection["description"] as? String
-                                val color = embedSection["color"] as Int
+                                val color = embedSection["color"] as? Int
 
                                 EmbedTemplate(title, description, color)
                             }

@@ -3,7 +3,7 @@ package dev.azoraqua.webhook
 data class EmbedTemplate(
     val title: String? = null,
     val description: String? = null,
-    val color: Int = 0x0000FF
+    val color: Int? = 0x0000FF
 )
 
 typealias MessageTemplate = String
